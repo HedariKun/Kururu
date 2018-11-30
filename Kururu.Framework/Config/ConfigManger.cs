@@ -22,7 +22,7 @@ namespace Kururu.Framework.Config
             foreach (var line in Data)
             {
                 if(line.StartsWith("#"))
-                    return;
+                    continue;
                 var KeyValue = line.Split("=");
                 await manger.AddAsync(KeyValue[0], KeyValue[1]);
             }
