@@ -19,11 +19,39 @@ namespace Kururu.Framework.Config
         {
 
             string[] Data = await File.ReadAllLinesAsync(Path.GetFullPath(_path));
+            bool CommentFound = false;
             foreach (var line in Data)
             {
-                if(line.StartsWith("#"))
+                string Value = line;
+                bool JustFound = false;
+                if (Value.Contains("<!--")) 
+                {
+                    CommentFound = true;
+                    if (Value.Contains("-->"))
+                        CommentFound = false;
+                    JustFound = true;
+                    var index = Value.IndexOf("<");
+                    Value = Value.Remove(index, Value.Length-index);
+                }
+                if (CommentFound && Value.Contains("-->"))
+                {
+                    Console.WriteLine("\n happens");
+                    CommentFound = false;
+                    JustFound = false;
+                    var index = Value.IndexOf(">");
+                    Value = Value.Remove(0, ++index);
+                }
+                if (Value.Contains("#"))
+                {
+                    var index = Value.IndexOf("#");
+                    Value = Value.Remove(index, Value.Length-index);
+                }
+                if(string.IsNullOrEmpty(Value) || (!JustFound && CommentFound))
                     continue;
-                var KeyValue = line.Split("=");
+                if (!Value.Contains("="))
+                    throw new Exception("Error, the data need to be in key=value pairs");
+                Value = Value.Replace(" ", "");
+                var KeyValue = Value.Split("=");
                 await manger.AddAsync(KeyValue[0], KeyValue[1]);
             }
         }

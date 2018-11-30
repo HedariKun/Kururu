@@ -66,7 +66,6 @@ namespace Kururu.Framework
 
 		public async Task StartAsync ()
 		{
-
 			await _gateway.StartAsync ();
 		}
 

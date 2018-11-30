@@ -1,3 +1,10 @@
-#Change the name of this file to .config
-#Discord Bot Token
-Token=
+<!--Change the name of this file to .config-->
+
+
+Token = NDQwMTk4MTYwODEyNjA1NDUy.DtiA_Q.FRAtWiHAqUyL3sl5Djbm8nMY4NA # Discord Bot's Token
+Prefix = ~ # The bot's prefix
+
+<!-- API KEYS - all of these are optional if you want to delete them or keep them they only will effect the functionallity of some of the bot's commands -->
+
+GiphyKey = 7hu8H0rUNu29TBhUpPIeyVCge0c1RI19
+WaaaiKey = a62d9171e7fd02d2456b9c5cb2ce4cb7 # this is optional, it only saves the shorted link to your account to keep track of it in waaai API website

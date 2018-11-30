@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Kururu.Framework;
 
@@ -12,7 +13,15 @@ namespace Kururu
 			await client.configManger.LoadData(client.cacheManger);
 			client.Setup(await client.cacheManger.GetAsync("Token"));
 			handler.StartHandler ();
-			await client.StartAsync ();
+			try 
+			{
+				await client.StartAsync ();
+			} catch (Exception)
+			{
+				Console.WriteLine("bots discconected, attempting to reconnect...");
+				await client.StartAsync();
+			}
+			 
 			await Task.Delay (-1);
 		}  
 	}

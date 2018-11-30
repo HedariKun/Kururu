@@ -9,14 +9,15 @@ namespace Kururu
 	public class ModuleHandler
 	{
 		private CommandHandle handler;
-		private string Prefix = "!";
+		private string Prefix;
 		public ModuleHandler ()
 		{
 			handler = new CommandHandle ();
 		}
 
-		public void StartHandler ()
+		public async Task StartHandler ()
 		{
+			Prefix = await DiscordBot.Instance.cacheManger.GetAsync("Prefix");
 			DiscordBot.Instance.bot.MessageCreate += HandleCommand;
 		}
 
