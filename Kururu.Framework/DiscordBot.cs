@@ -26,6 +26,7 @@ namespace Kururu.Framework
 		public ConfigManger configManger;
 		public MysqlHandler mysqlHandler;
 		public CacheManger<GuildData> GuildsData;
+		public DateTime UpTime;
 		public DiscordBot (string ConfigPath)
 		{
 			cacheManger = new CacheManger<string> ();
@@ -83,6 +84,7 @@ namespace Kururu.Framework
 		{
 			try 
 			{
+				UpTime = DateTime.Now;
 				await _gateway.StartAsync ();
 			} catch (Exception)
 			{

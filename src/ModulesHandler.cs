@@ -43,7 +43,7 @@ namespace Kururu
 		{
 			var guild = await ((IDiscordGuildChannel) await message.GetChannelAsync()).GetGuildAsync();
 			var guildData = await DiscordBot.Instance.GuildsData.GetAsync(guild.Id.ToString());
-			var Prefix = guildData.Prefix != null ? guildData.Prefix : _prefix;
+			var Prefix = guildData?.Prefix != null ? guildData.Prefix : _prefix;
 			if (message.Content.StartsWith (Prefix) == false)
 				return;
 			MessageContext context = new MessageContext (Prefix, message);
