@@ -22,7 +22,7 @@ namespace Kururu
 		{
 			var Guilds = await DiscordBot.Instance.mysqlHandler.QueryData<GuildData>("SELECT * FROM guilds");
 			foreach(var Guild in Guilds) {
-				await GuildsData.AddAsync(Guild.GuildID.ToString(), Guild);
+				await DiscordBot.Instance.GuildsData.AddAsync(Guild.GuildID.ToString(), Guild);
 			}
 			_prefix = await DiscordBot.Instance.cacheManger.GetAsync("Prefix");
 			DiscordBot.Instance.bot.MessageCreate += HandleCommand;
