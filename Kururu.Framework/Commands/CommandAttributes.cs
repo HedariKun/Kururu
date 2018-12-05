@@ -38,4 +38,10 @@ namespace Kururu.Framework.Commands
 		}
 
 	}
+
+	[AttributeUsage (AttributeTargets.Method)]
+	public class OwnerAttribute : Attribute 
+	{
+		
+	}
 }

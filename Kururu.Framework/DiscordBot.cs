@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Kururu.Framework.Cache;
+using Kururu.Framework.MySql;
 using Kururu.Framework.Config;
 using Miki.Cache;
 using Miki.Cache.InMemory;
@@ -23,14 +24,28 @@ namespace Kururu.Framework
 		public CacheManger<string> cacheManger;
 		private IGateway _gateway;
 		public ConfigManger configManger;
+		public MysqlHandler mysqlHandler;
+		public CacheManger<GuildData> GuildsData;
 		public DiscordBot (string ConfigPath)
 		{
-			cacheManger = new CacheManger<string> ();		
+			cacheManger = new CacheManger<string> ();
+			GuildsData = new CacheManger<GuildData>();
 			configManger = new ConfigManger(ConfigPath);
 		}
 
-		public void Setup (string Token)
+		public async Task Setup (string Token)
 		{
+			if (await cacheManger.ExistAsync("DBHost"))
+			{
+				mysqlHandler = new MysqlHandler(new MysqlConfig() {
+					DBHost = await cacheManger.GetAsync("DBHost"),
+					DBUser = await cacheManger.GetAsync("DBUser"),
+					DBPassword = await cacheManger.GetAsync("DBPassword"),
+					DBName = await cacheManger.GetAsync("DBName")
+				});
+			}
+			
+
 			Log.OnLog += (string msg, LogLevel level) =>
 			{
 				if (level >= LogLevel.Information)
@@ -66,7 +81,18 @@ namespace Kururu.Framework
 
 		public async Task StartAsync ()
 		{
-			await _gateway.StartAsync ();
+			try 
+			{
+				await _gateway.StartAsync ();
+				var Guilds = await DiscordBot.Instance.mysqlHandler.QueryData<GuildData>("SELECT * FROM guilds");
+				foreach(var Guild in Guilds) {
+					await GuildsData.AddAsync(Guild.GuildID.ToString(), Guild);
+				}
+			} catch (Exception)
+			{
+				Console.WriteLine("bots discconected, attempting to reconnect...");
+				await _gateway.StartAsync();
+			}
 		}
 
 	}

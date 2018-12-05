@@ -3,8 +3,15 @@
 
 Token = [your key] # Discord Bot's Token
 Prefix = ~ # The bot's prefix
+OwnerID = [Discord User ID Here]
 
 <!-- API KEYS - all of these are optional if you want to delete them or keep them they only will effect the functionallity of some of the bot's commands -->
 
 GiphyKey = [your key]
 WaaaiKey = [your key] # this is optional, it only saves the shorted link to your account to keep track of it in waaai API website
+
+<!-- Mysql Configuration -->
+DBHost = 127.0.0.1
+DBUser = root
+DBPassword = 
+DBName = kururudb

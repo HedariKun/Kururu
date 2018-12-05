@@ -1,6 +1,8 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Miki.Discord.Common;
 using Kururu.Framework;
+using Kururu.Framework.MySql;
 using Kururu.Framework.Commands;
 
 namespace Kururu.Module
@@ -34,6 +36,21 @@ namespace Kururu.Module
 				await Guild.AddBanAsync (Member);
 				await Channel.SendMessageAsync ("", false, Maker);
 			}
+		}
+
+		[Command("SetPrefix")]
+		[Permission(GuildPermission.Administrator)]
+		public async Task SetPrefixCommand()
+		{
+			if(Arg.Length <= 0)
+			{
+				await Channel.SendMessageAsync("You need To Provide a Prefix");
+				return;
+			}
+			await DiscordBot.Instance.mysqlHandler.QueryData($"Update guilds SET guilds.Prefix=\"{Arg[0]}\" WHERE guilds.GuildID={Guild.Id}");
+			var NewData = await DiscordBot.Instance.mysqlHandler.QueryData<GuildData>($"SELECT * FROM guilds WHERE guilds.GuildID={Guild.Id}");
+			await DiscordBot.Instance.GuildsData.UpdateAsync(Guild.Id.ToString(), NewData[0]);
+			await Channel.SendMessageAsync($"The Server's Prefix Updated To: **{Arg[0]}**");
 		}
 
 	}

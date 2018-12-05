@@ -68,6 +68,13 @@ namespace Kururu.Framework
 							return;
 						}
 					}
+					if (method.GetCustomAttribute<OwnerAttribute>() != null)
+					{
+						if (instance.Author.Id != Convert.ToUInt64(await DiscordBot.Instance.cacheManger.GetAsync("OwnerID")))
+						{
+							return;
+						}
+					}
 					method.Invoke (instance, null);
 				}
 			}

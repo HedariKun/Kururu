@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Kururu.API.Waaai;
 using Kururu.Framework;
+using Kururu.Framework.MySql;
 using Kururu.Framework.Config;
 using Kururu.Framework.Commands;
 using Miki.Discord.Common;
@@ -77,6 +78,26 @@ namespace Kururu.Module
 			maker.setTitle("Link Shorter").setDesctiption($"The shorted link is: {res.Data.Url}").setFooter("Powered by Waaai");
 			await Channel.SendMessageAsync("", false, maker);
 		}
+
+		[Command("addGuild")]
+		[Owner]
+		public async Task TestCommand ()
+		{
+			if(! await DiscordBot.Instance.GuildsData.ExistAsync(Guild.Id.ToString()))
+				await DiscordBot.Instance.mysqlHandler.QueryData($"INSERT INTO `guilds` (guilds.GuildID, guilds.Prefix, guilds.AddDate) VALUES ({Guild.Id}, \"~\", \"{DateTime.Now.ToString("yyyy-MM-dd H:mm:ss")}\")");
+		}
+
+		[Command("addGuilds")]
+		[Owner]
+		public async Task test ()
+		{
+			var Guilds = await DiscordBot.Instance.bot.CacheClient.HashKeysAsync(CacheUtils.GuildsCacheKey);
+			foreach (var ID in Guilds) {
+				if (!await DiscordBot.Instance.GuildsData.ExistAsync(ID))
+					await DiscordBot.Instance.mysqlHandler.QueryData($"INSERT INTO `guilds` (guilds.GuildID, guilds.Prefix, guilds.AddDate) VALUES ({ID}, \"~\", \"{DateTime.Now.ToString("yyyy-MM-dd H:mm:ss")}\")");
+			}
+		}
+
 
 	}
 }

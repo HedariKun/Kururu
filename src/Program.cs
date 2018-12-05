@@ -8,20 +8,12 @@ namespace Kururu
 	{
 		public static async Task Main ()
 		{
-			ModuleHandler handler = new ModuleHandler ();
+			BotHandler handler = new BotHandler ();
 			DiscordBot client = new DiscordBot (".config");
 			await client.configManger.LoadData(client.cacheManger);
-			client.Setup(await client.cacheManger.GetAsync("Token"));
-			handler.StartHandler ();
-			try 
-			{
-				await client.StartAsync ();
-			} catch (Exception)
-			{
-				Console.WriteLine("bots discconected, attempting to reconnect...");
-				await client.StartAsync();
-			}
-			 
+			await client.Setup(await client.cacheManger.GetAsync("Token"));
+			await handler.StartHandler ();
+			await client.StartAsync ();
 			await Task.Delay (-1);
 		}  
 	}

@@ -36,6 +36,12 @@ namespace Kururu.Framework.Cache
 			return _dictionary.TryAdd(Key, Value);
 		}
 
+		public async Task UpdateAsync (string Key, T Value)
+		{
+			await Task.Yield();
+			_dictionary[Key] = Value;
+		}
+
 		public async Task<int> CountAsync ()
 		{
 			await Task.Yield ();
