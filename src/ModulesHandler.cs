@@ -20,6 +20,10 @@ namespace Kururu
 
 		public async Task StartHandler ()
 		{
+			var Guilds = await DiscordBot.Instance.mysqlHandler.QueryData<GuildData>("SELECT * FROM guilds");
+			foreach(var Guild in Guilds) {
+				await GuildsData.AddAsync(Guild.GuildID.ToString(), Guild);
+			}
 			_prefix = await DiscordBot.Instance.cacheManger.GetAsync("Prefix");
 			DiscordBot.Instance.bot.MessageCreate += HandleCommand;
 			DiscordBot.Instance.bot.GuildJoin += JoinGuild;

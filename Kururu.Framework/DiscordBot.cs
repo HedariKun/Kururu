@@ -84,10 +84,6 @@ namespace Kururu.Framework
 			try 
 			{
 				await _gateway.StartAsync ();
-				var Guilds = await DiscordBot.Instance.mysqlHandler.QueryData<GuildData>("SELECT * FROM guilds");
-				foreach(var Guild in Guilds) {
-					await GuildsData.AddAsync(Guild.GuildID.ToString(), Guild);
-				}
 			} catch (Exception)
 			{
 				Console.WriteLine("bots discconected, attempting to reconnect...");
