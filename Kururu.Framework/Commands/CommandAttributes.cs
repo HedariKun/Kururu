@@ -6,25 +6,14 @@ namespace Kururu.Framework.Commands
 	[AttributeUsage (AttributeTargets.Method)]
 	public class CommandAttribute : Attribute
 	{
-		public string Name { get; private set; }
-
-		public CommandAttribute (string name)
-		{
-			Name = name;
-		}
-
-	}
-
-	[AttributeUsage (AttributeTargets.Method)]
-	public class PermissionAttribute : Attribute
-	{
+		public string Name { get; set; }
 		public GuildPermission Permission = GuildPermission.None;
+		public string[] Alias;
 
-
-		public PermissionAttribute (GuildPermission _permissions)
+		public CommandAttribute ()
 		{
-			Permission = _permissions;
 		}
+
 	}
 
 	[AttributeUsage (AttributeTargets.Class)]

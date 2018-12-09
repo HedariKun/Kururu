@@ -12,7 +12,7 @@ namespace Kururu.Framework
 	public class CommandHandle
 	{
 		private List<Type> _modules = new List<Type> ();
-		private Dictionary<string, Type> _commands = new Dictionary<string, Type> ();
+		private Dictionary<string[], Type> _commands = new Dictionary<string[], Type> ();
 
 		public CommandHandle ()
 		{
@@ -24,59 +24,88 @@ namespace Kururu.Framework
 				var methods = t.GetMethods ().Where (x => x.GetCustomAttributes<CommandAttribute> ().Count () > 0);
 				foreach (var command in methods)
 				{
-					var name = command.GetCustomAttribute<CommandAttribute> ().Name.ToLower ();
-					_commands.Add (name, t);
+					var CommandInfo = command.GetCustomAttribute<CommandAttribute>();
+					string[] alias = new string[]{CommandInfo.Name.ToLower()};
+					if (CommandInfo.Alias != null)
+					{
+						foreach (var Name in CommandInfo.Alias)
+						{
+							alias = alias.Append(Name.ToLower()).ToArray();
+						}
+					}
+					_commands.Add (alias, t);
 				}
 			}
 		}
 
 		public async Task ExecuteCommand (MessageContext context)
 		{
-			if (_commands.TryGetValue (context.Command, out var data))
+			foreach (var Command in _commands)
 			{
-				ModuleBase instance = (ModuleBase) Activator.CreateInstance (data);
-				instance.Channel = await context.Message.GetChannelAsync ();
-				if (instance.Channel is IDiscordGuildChannel guildChannel)
+				foreach (var Name in Command.Key)
 				{
-					instance.Guild = await guildChannel.GetGuildAsync ();
-				}
-
-				instance.Author = instance.Guild == null ? context.Message.Author : await instance.Guild.GetMemberAsync (context.Message.Author.Id);
-
-				instance.Message = context.Message;
-				instance.Arg = context.Arg;
-
-				var Fields = data.GetFields().Where(x => x.GetCustomAttribute<ConfigurationAttribute>() != null);
-				foreach (var Field in Fields)
-				{
-					var name = Field.GetCustomAttribute<ConfigurationAttribute>().Key;
-					if (string.IsNullOrEmpty(name))
-						name = Field.Name;
-					var Value = await DiscordBot.Instance.cacheManger.GetAsync(name);
-					Field.SetValue(instance, Convert.ChangeType(Value, Field.FieldType));
-				}
-
-				var methods = data.GetMethods ().Where (x => x.GetCustomAttribute<CommandAttribute> () != null ? x.GetCustomAttribute<CommandAttribute> ().Name.ToLower () == context.Command : false);
-				foreach (var method in methods)
-				{
-					var Permission = method.GetCustomAttribute<PermissionAttribute> ();
-					if (Permission != null)
+					if (Name == context.Command)
 					{
-						var hasPermission = await ((IDiscordGuildUser) instance.Author).HasPermissionsAsync (Permission.Permission);
-						if (!hasPermission)
+						var data = Command.Value;
+						ModuleBase instance = (ModuleBase) Activator.CreateInstance (data);
+						instance.Channel = await context.Message.GetChannelAsync ();
+						if (instance.Channel is IDiscordGuildChannel guildChannel)
 						{
-							return;
+							instance.Guild = await guildChannel.GetGuildAsync ();
+						}
+
+						instance.Author = instance.Guild == null ? context.Message.Author : await instance.Guild.GetMemberAsync (context.Message.Author.Id);
+
+						instance.Message = context.Message;
+						instance.Arg = context.Arg;
+
+						var Fields = data.GetFields().Where(x => x.GetCustomAttribute<ConfigurationAttribute>() != null);
+						foreach (var Field in Fields)
+						{
+							var name = Field.GetCustomAttribute<ConfigurationAttribute>().Key;
+							if (string.IsNullOrEmpty(name))
+								name = Field.Name;
+							var Value = await DiscordBot.Instance.cacheManger.GetAsync(name);
+							Field.SetValue(instance, Convert.ChangeType(Value, Field.FieldType));
+						}
+						var methods = data.GetMethods().Where(x => {
+							var CommandInfo = x.GetCustomAttribute<CommandAttribute>();
+							if (CommandInfo != null)
+							{
+								if (CommandInfo.Name.ToLower() == context.Command)
+									return true;
+
+								if (CommandInfo.Alias != null)
+									foreach(var Alias in CommandInfo.Alias)
+									{
+										if (Alias.ToLower() == context.Command)
+											return true;
+									}
+							}
+							return false;
+						});
+						foreach (var method in methods)
+						{
+							var Permission = method.GetCustomAttribute<CommandAttribute> ().Permission;
+							if (Permission != GuildPermission.None)
+							{
+								var hasPermission = await ((IDiscordGuildUser) instance.Author).HasPermissionsAsync (Permission);
+								if (!hasPermission)
+								{
+									return;
+								}
+							}
+							if (method.GetCustomAttribute<OwnerAttribute>() != null)
+							{
+								if (instance.Author.Id != Convert.ToUInt64(await DiscordBot.Instance.cacheManger.GetAsync("OwnerID")))
+								{
+									return;
+								}
+							}
+							method.Invoke (instance, null);
 						}
 					}
-					if (method.GetCustomAttribute<OwnerAttribute>() != null)
-					{
-						if (instance.Author.Id != Convert.ToUInt64(await DiscordBot.Instance.cacheManger.GetAsync("OwnerID")))
-						{
-							return;
-						}
-					}
-					method.Invoke (instance, null);
-				}
+				}				
 			}
 		}
 

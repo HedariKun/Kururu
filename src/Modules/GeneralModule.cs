@@ -18,10 +18,10 @@ namespace Kururu.Module
 		[Configuration]
 		public string WaaaiKey = "";
 
-		[Command ("Say")]
+		[Command (Name = "Say")]
 		public async Task SayCommand () => await Channel.SendMessageAsync (string.Join (" ", Arg));
 
-		[Command ("Ping")]
+		[Command (Name = "Ping", Alias = new string[]{"Letancy"})]
 		public async Task PingCommand ()
 		{
 			EmbedMaker maker = new EmbedMaker ();
@@ -34,21 +34,9 @@ namespace Kururu.Module
 			await msg.EditAsync (new EditMessageArgs () { embed = maker });
 		}
 
-		[Command ("Choose")]
-		public async Task ChooseCommand ()
-		{
-			if (Arg.Length < 2)
-			{
-				await Channel.SendMessageAsync ("you need to provide 2 or more choices");
-				return;
-			}
+		
 
-			Random random = new Random ();
-			string Choice = Arg [random.Next (Arg.Length)];
-			await Channel.SendMessageAsync ($"I'll choose: **{Choice}**");
-		}
-
-		[Command ("Avatar")]
+		[Command (Name = "Avatar")]
 		public async Task AvatarCommand ()
 		{
 			var Member = Arg [0] != null ? await GetUser () : Author;
@@ -60,7 +48,7 @@ namespace Kururu.Module
 			await Channel.SendMessageAsync ("", false, maker);
 		}
 
-		[Command ("ShortLink")]
+		[Command (Name = "ShortLink")]
 		public async Task ShortLinkCommand ()
 		{
 			if (Arg.Length < 1)
@@ -79,17 +67,17 @@ namespace Kururu.Module
 			await Channel.SendMessageAsync("", false, maker);
 		}
 
-		[Command("addGuild")]
+		[Command(Name = "addGuild")]
 		[Owner]
-		public async Task TestCommand ()
+		public async Task AddGuild ()
 		{
 			if(! await DiscordBot.Instance.GuildsData.ExistAsync(Guild.Id.ToString()))
 				await DiscordBot.Instance.mysqlHandler.QueryData($"INSERT INTO `guilds` (guilds.GuildID, guilds.Prefix, guilds.AddDate) VALUES ({Guild.Id}, \"~\", \"{DateTime.Now.ToString("yyyy-MM-dd H:mm:ss")}\")");
 		}
 
-		[Command("addGuilds")]
+		[Command(Name = "addGuilds")]
 		[Owner]
-		public async Task test ()
+		public async Task AddGuilds ()
 		{
 			var Guilds = await DiscordBot.Instance.bot.CacheClient.HashKeysAsync(CacheUtils.GuildsCacheKey);
 			foreach (var ID in Guilds) {

@@ -18,7 +18,7 @@ namespace Kururu.Module
 		[Configuration]
 		public string GiphyKey;
 
-		[Command ("Cat")]
+		[Command (Name = "Cat")]
 		public async Task CatCommand ()
 		{
 			var res = await APIRequestor.GetRequest<CatResponse> ("http://aws.random.cat/meow");
@@ -26,7 +26,7 @@ namespace Kururu.Module
 			await Channel.SendMessageAsync ("", false, maker);
 		}
 
-		[Command ("Dog")]
+		[Command (Name = "Dog")]
 		public async Task DogCommand ()
 		{
 			var res = await APIRequestor.GetRequest<DogResponse> ("https://dog.ceo/api/breeds/image/random");
@@ -34,7 +34,7 @@ namespace Kururu.Module
 			await Channel.SendMessageAsync ("", false, maker);
 		}
 
-		[Command ("Fox")]
+		[Command (Name = "Fox")]
 		public async Task FoxCommand ()
 		{
 			var res = await APIRequestor.GetRequest<FoxResponse> ("https://randomfox.ca/floof");
@@ -42,7 +42,7 @@ namespace Kururu.Module
 			await Channel.SendMessageAsync ("", false, maker);
 		}
 
-		[Command("Yandere")]
+		[Command(Name = "Yandere")]
 		public async Task YandereCommand ()
 		{
 			if (Arg.Length < 1)
@@ -75,7 +75,7 @@ namespace Kururu.Module
 			await Channel.SendMessageAsync("", false, maker);
 		}
 
-		[Command("Gif")]
+		[Command(Name = "Gif")]
 		public async Task GifCommand ()
 		{
 			string Tag = Arg.Length < 1 ? Tag = "Anime" : Tag = Arg[0];

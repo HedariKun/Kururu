@@ -9,7 +9,7 @@ namespace Kururu.Module
     [Module("Actions")]
     public class ActionsModule : ModuleBase
     {
-        [Command("Hug")]
+        [Command(Name = "Hug")]
         public async Task HugCommed ()
         {
             var Member = await GetUser();
@@ -19,7 +19,7 @@ namespace Kururu.Module
             await Channel.SendMessageAsync("", false, maker);
         }
 
-        [Command("Cuddle")]
+        [Command(Name = "Cuddle")]
         public async Task CuddleCommed ()
         {
             var Member = await GetUser();
@@ -29,7 +29,7 @@ namespace Kururu.Module
             await Channel.SendMessageAsync("", false, maker);
         }
 
-        [Command("Pat")]
+        [Command(Name = "Pat")]
         public async Task PatCommand ()
         {
             var Member = await GetUser();
@@ -39,7 +39,7 @@ namespace Kururu.Module
             await Channel.SendMessageAsync("", false, maker);
         }
 
-        [Command("Kiss")]
+        [Command(Name = "Kiss")]
         public async Task KissCommand ()
         {
             var Member = await GetUser();
@@ -49,7 +49,7 @@ namespace Kururu.Module
             await Channel.SendMessageAsync("", false, maker);
         }
 
-        [Command("Poke")]
+        [Command(Name = "Poke")]
         public async Task PokeCommand ()
         {
             var Member = await GetUser();
@@ -59,7 +59,7 @@ namespace Kururu.Module
             await Channel.SendMessageAsync("", false, maker);
         }
 
-        [Command("Slap")]
+        [Command(Name = "Slap")]
         public async Task SlapCommed ()
         {
             var Member = await GetUser();
@@ -69,7 +69,7 @@ namespace Kururu.Module
             await Channel.SendMessageAsync("", false, maker);
         }
 
-        [Command("Tickle")]
+        [Command(Name = "Tickle")]
         public async Task TickleCommand ()
         {
             var Member = await GetUser();
@@ -79,7 +79,7 @@ namespace Kururu.Module
             await Channel.SendMessageAsync("", false, maker);
         }
 
-        [Command("Feed")]
+        [Command(Name = "Feed")]
         public async Task FeedCommand ()
         {
             var Member = await GetUser();
@@ -89,7 +89,7 @@ namespace Kururu.Module
             await Channel.SendMessageAsync("", false, maker);
         }
 
-        [Command("Baka")]
+        [Command(Name = "Baka")]
         public async Task BakaCommand ()
         {
             var Member = await GetUser();
@@ -99,7 +99,7 @@ namespace Kururu.Module
             await Channel.SendMessageAsync("", false, maker);
         }
 
-        [Command("Meow")]
+        [Command(Name = "Meow")]
         public async Task MeowCommand ()
         {
             var Member = await GetUser();
@@ -109,7 +109,7 @@ namespace Kururu.Module
             await Channel.SendMessageAsync("", false, maker);
         }
         
-        [Command("Smug")]
+        [Command(Name = "Smug")]
         public async Task SmugCommand ()
         {
             var Member = await GetUser();

@@ -44,10 +44,27 @@ namespace Kururu
 			var guild = await ((IDiscordGuildChannel) await message.GetChannelAsync()).GetGuildAsync();
 			var guildData = await DiscordBot.Instance.GuildsData.GetAsync(guild.Id.ToString());
 			var Prefix = guildData?.Prefix != null ? guildData.Prefix : _prefix;
-			if (message.Content.StartsWith (Prefix) == false)
-				return;
-			MessageContext context = new MessageContext (Prefix, message);
-			await _handler.ExecuteCommand (context);
+			var botUser = await DiscordBot.Instance.bot.GetCurrentUserAsync();
+			var MentionPrefix = "";
+			if (message.Content.StartsWith($"<@!{botUser.Id}>"))
+				MentionPrefix = $"<@!{botUser.Id}> ";
+			
+			if (message.Content == $"<@!{botUser.Id}>" || message.Content == (await DiscordBot.Instance.bot.GetCurrentUserAsync()).Mention)
+			{
+				var Channel = await message.GetChannelAsync();
+				await Channel.SendMessageAsync($"Haiii <3, The Prefix for this Bot is {Prefix} \n to See all Commands use {Prefix}help Command");
+                return;
+			}
+			if (message.Content.StartsWith(Prefix))
+			{
+				MessageContext context = new MessageContext (Prefix, message);
+				await _handler.ExecuteCommand (context);
+			} 
+			else if (!string.IsNullOrEmpty(MentionPrefix))
+			{
+				MessageContext context = new MessageContext (MentionPrefix, message);
+				await _handler.ExecuteCommand (context);
+			}
 		}
 
 	}

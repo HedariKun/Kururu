@@ -10,7 +10,7 @@ namespace Kururu.Module
 	[Module ("fun")]
 	public class FunModule : ModuleBase
 	{
-		[Command ("ship")]
+		[Command (Name = "ship")]
 		public async Task ShipCommand ()
 		{
 			var Member = await GetUser ();
@@ -30,7 +30,7 @@ namespace Kururu.Module
 			await Channel.SendMessageAsync ($"The love rate between {Author.Username} and {Member.Username} is {ShipAmount}%");
 		}
 
-		[Command("Urban")]
+		[Command(Name = "Urban")]
 		public async Task UrbanCommand ()
 		{
 			if(Arg.Length < 1) 
@@ -42,6 +42,20 @@ namespace Kururu.Module
 			EmbedMaker maker = new EmbedMaker();
 			maker.setTitle($"definition of {Arg[0]}").addField("Definition", res.DefinitionsList[0].Definition).addField("Example", res.DefinitionsList[0].Example).setFooter($"by {res.DefinitionsList[0].Author}, {res.DefinitionsList[0]?.PostDate}");
 			await Channel.SendMessageAsync("", false, maker);
+		}
+
+		[Command (Name = "Choose")]
+		public async Task ChooseCommand ()
+		{
+			if (Arg.Length < 2)
+			{
+				await Channel.SendMessageAsync ("you need to provide 2 or more choices");
+				return;
+			}
+
+			Random random = new Random ();
+			string Choice = Arg [random.Next (Arg.Length)];
+			await Channel.SendMessageAsync ($"I'll choose: **{Choice}**");
 		}
 
 	}

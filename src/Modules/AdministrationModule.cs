@@ -10,8 +10,7 @@ namespace Kururu.Module
 	[Module ("Administration")]
 	public class AdministrationModule : ModuleBase
 	{
-		[Command ("kick")]
-		[Permission (GuildPermission.KickMembers)]
+		[Command (Name = "kick", Permission = GuildPermission.KickMembers)]
 		public async Task KickMember ()
 		{
 			var Member = await GetUser ();
@@ -24,8 +23,7 @@ namespace Kururu.Module
 			}
 		}
 
-		[Command ("ban")]
-		[Permission (GuildPermission.BanMembers)]
+		[Command (Name = "ban", Permission = GuildPermission.BanMembers)]
 		public async Task BanMember ()
 		{
 			var Member = await GetUser ();
@@ -38,8 +36,7 @@ namespace Kururu.Module
 			}
 		}
 
-		[Command("SetPrefix")]
-		[Permission(GuildPermission.Administrator)]
+		[Command(Name = "SetPrefix", Permission = GuildPermission.Administrator)]
 		public async Task SetPrefixCommand()
 		{
 			if(Arg.Length <= 0)
