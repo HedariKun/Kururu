@@ -1,1 +1,0 @@
-git pull https://gitlab.com/HedariKun/kururur.git master
