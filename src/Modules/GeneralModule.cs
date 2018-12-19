@@ -19,7 +19,8 @@ namespace Kururu.Module
 		public string WaaaiKey = "";
 
 		[Command (Name = "Say")]
-		public async Task SayCommand () => await Channel.SendMessageAsync (string.Join (" ", Arg));
+		public async Task SayCommand () =>
+			await Channel.SendMessageAsync (string.Join (" ", Arg));
 
 		[Command (Name = "Ping", Alias = new string[]{"Letancy"})]
 		public async Task PingCommand ()

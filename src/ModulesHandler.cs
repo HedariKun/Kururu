@@ -41,6 +41,7 @@ namespace Kururu
 
 		public async Task HandleCommand (IDiscordMessage message)
 		{
+			Console.WriteLine(message.Content);
 			var guild = await ((IDiscordGuildChannel) await message.GetChannelAsync()).GetGuildAsync();
 			var guildData = await DiscordBot.Instance.GuildsData.GetAsync(guild.Id.ToString());
 			var Prefix = guildData?.Prefix != null ? guildData.Prefix : _prefix;

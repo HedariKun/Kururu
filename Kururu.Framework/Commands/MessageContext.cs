@@ -12,7 +12,7 @@ namespace Kururu.Framework.Commands
 		public MessageContext (string _prefix, IDiscordMessage _message)
 		{
 			Message = _message;
-			var commandList = _message.Content.Replace (_prefix, "").Split (" ");
+			var commandList = _message.Content.Substring(_prefix.Length, _message.Content.Length-1).Split (" ");
 			Command = commandList [0].ToLower ();
 			Arg = commandList.Skip (1).ToArray ();
 		}

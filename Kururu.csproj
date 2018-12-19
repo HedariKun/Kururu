@@ -9,9 +9,11 @@
   <ItemGroup>
     <PackageReference Include="GiphySharp" Version="2.0.1" />
     <PackageReference Include="Miki.Cache.InMemory" Version="1.1.4" />
-    <PackageReference Include="Miki.Discord" Version="2.6.7" />
-    <PackageReference Include="Miki.Discord.Caching" Version="2.4.3" />
+    <PackageReference Include="Miki.Discord" Version="2.6.8" />
+    <PackageReference Include="Miki.Discord.Caching" Version="2.4.4" />
+    <PackageReference Include="Miki.Discord.Common" Version="1.7.0" />
     <PackageReference Include="Miki.Discord.Gateway.Centralized" Version="0.1.0-beta3" />
+    <PackageReference Include="Miki.Net.Http" Version="2.1.0" />
     <PackageReference Include="Miki.Serialization" Version="0.1.0" />
     <PackageReference Include="Miki.Serialization.Protobuf" Version="1.0.4" />
     <PackageReference Include="MySql.Data" Version="8.0.13" />

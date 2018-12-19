@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Kururu.Framework.Config;
 using Kururu.Framework.Commands;
@@ -102,12 +103,13 @@ namespace Kururu.Framework
 									return;
 								}
 							}
-							method.Invoke (instance, null);
+							if (instance.Channel == null)
+								instance.Channel = await context.Message.GetChannelAsync();
+							method.Invoke(instance, null);
 						}
 					}
 				}				
 			}
 		}
-
 	}
 }
