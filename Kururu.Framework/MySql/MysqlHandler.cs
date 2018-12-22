@@ -11,7 +11,6 @@ namespace Kururu.Framework.MySql
 	public class MysqlHandler
 	{
 		private MySqlConnection _connection;
-		public List<GuildData> Servers;
 
 		public MysqlHandler (MysqlConfig config)
 		{

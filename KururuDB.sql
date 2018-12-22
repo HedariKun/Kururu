@@ -19,16 +19,26 @@ USE `kururudb`;
 -- Dumping structure for table kururudb.guilds
 CREATE TABLE IF NOT EXISTS `guilds` (
   `GuildID` bigint(20) NOT NULL,
-  `Prefix` tinytext NOT NULL,
+  `Prefix` tinytext COLLATE utf8_bin NOT NULL,
   `WelcomeMessageActive` tinyint(4) DEFAULT 0,
-  `WelcomeMessage` text DEFAULT NULL,
+  `WelcomeMessage` text COLLATE utf8_bin DEFAULT NULL,
   `WelcomeMessageChannel` bigint(20) DEFAULT NULL,
-  `DefaultRole` text DEFAULT NULL,
+  `DefaultRole` text COLLATE utf8_bin DEFAULT NULL,
   `GoodbyeMessageActive` tinyint(4) DEFAULT 0,
-  `GoodbyeMessage` text DEFAULT NULL,
+  `GoodbyeMessage` text COLLATE utf8_bin DEFAULT NULL,
   `GoodbyeMessageChannel` bigint(20) DEFAULT NULL,
   `AddDate` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- Data exporting was unselected.
+-- Dumping structure for table kururudb.pasta
+CREATE TABLE IF NOT EXISTS `pasta` (
+  `Key` tinytext COLLATE utf8_bin NOT NULL,
+  `Value` text COLLATE utf8_bin NOT NULL,
+  `UserID` bigint(20) DEFAULT NULL,
+  `ServerID` bigint(20) DEFAULT NULL,
+  `AddDate` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- Data exporting was unselected.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

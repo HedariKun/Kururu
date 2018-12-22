@@ -6,6 +6,7 @@ using Kururu.Extensions;
 using Kururu.Framework;
 using Kururu.Framework.Commands;
 using Miki.Discord.Common.Packets;
+using System.Diagnostics;
 
 namespace Kururu.Module
 {
@@ -17,9 +18,16 @@ namespace Kururu.Module
         {
             var Data = KMath.CalculateTime(DiscordBot.Instance.UpTime, DateTime.Now);
             int UserAmount = (await Guild.GetMembersAsync()).Length;
+            var commandCallValue = await DiscordBot.Instance.cacheManger.GetAsync("CommandCall");
+            var messageCallValue = await DiscordBot.Instance.cacheManger.GetAsync("MessageCall");
+            var memoryUsage = Process.GetCurrentProcess().PrivateMemorySize64 / 1000 / 1000;
             EmbedMaker maker = new EmbedMaker();
-            maker.setTitle("Kururu's info").addField("Info", $"This bot is running in {await DiscordBot.Instance.GuildsData.CountAsync()} Servers")
+            maker.setTitle("Kururu's info")
+            .addField("Info", $"This bot is running in {await Program.GuildsData.CountAsync()} Servers")
             .addInlineField("Language", "c#").addInlineField("Owner", "Hedari")
+            .addInlineField("Commands", commandCallValue)
+            .addInlineField("Messages", messageCallValue)
+            .addInlineField("Memory Usage", $"{memoryUsage} MB")
             .addField("Runtime", $"This bot has been running for, {Data.Days} Day, {Data.Hours} Hour, {Data.Minutes} Minute and {Data.Seconds} Second");
             await Channel.SendMessageAsync("", false, maker);
         }
@@ -40,7 +48,7 @@ namespace Kururu.Module
                         CommandsString += $"{Command.GetCustomAttribute<CommandAttribute>().Name}, ";   
                 }
                 CommandsString = CommandsString.Substring(0, CommandsString.Length-2);
-                maker.addInlineField(module.Name, CommandsString);
+                maker.addField(module.Name.Replace("Module", ""), CommandsString);
             }
             await Channel.SendMessageAsync("", false, maker);
         }
@@ -55,7 +63,7 @@ namespace Kururu.Module
                 EmbedMaker maker = new EmbedMaker();
                 maker.setTitle(Guild.Name).addInlineField("Owner", Owner?.Username)
                 .addInlineField($"Members", $"there is {Members.Length} in the guild")
-                .addInlineField("Server's Prefix", (await DiscordBot.Instance.GuildsData.GetAsync(Guild.Id.ToString())).Prefix)
+                .addInlineField("Server's Prefix", (await Program.GuildsData.GetAsync(Guild.Id.ToString())).Prefix)
                 .addInlineField("Roles Amount", (await Guild.GetRolesAsync()).Count().ToString())
                 .addInlineField("Channels", (await Guild.GetChannelsAsync()).Count().ToString());
                 await Channel.SendMessageAsync("", false, maker);

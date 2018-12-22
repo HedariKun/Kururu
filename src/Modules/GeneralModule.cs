@@ -72,7 +72,7 @@ namespace Kururu.Module
 		[Owner]
 		public async Task AddGuild ()
 		{
-			if(! await DiscordBot.Instance.GuildsData.ExistAsync(Guild.Id.ToString()))
+			if(! await Program.GuildsData.ExistAsync(Guild.Id.ToString()))
 				await DiscordBot.Instance.mysqlHandler.QueryData($"INSERT INTO `guilds` (guilds.GuildID, guilds.Prefix, guilds.AddDate) VALUES ({Guild.Id}, \"~\", \"{DateTime.Now.ToString("yyyy-MM-dd H:mm:ss")}\")");
 		}
 
@@ -82,7 +82,7 @@ namespace Kururu.Module
 		{
 			var Guilds = await DiscordBot.Instance.bot.CacheClient.HashKeysAsync(CacheUtils.GuildsCacheKey);
 			foreach (var ID in Guilds) {
-				if (!await DiscordBot.Instance.GuildsData.ExistAsync(ID))
+				if (!await Program.GuildsData.ExistAsync(ID))
 					await DiscordBot.Instance.mysqlHandler.QueryData($"INSERT INTO `guilds` (guilds.GuildID, guilds.Prefix, guilds.AddDate) VALUES ({ID}, \"~\", \"{DateTime.Now.ToString("yyyy-MM-dd H:mm:ss")}\")");
 			}
 		}

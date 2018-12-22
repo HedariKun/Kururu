@@ -13,6 +13,7 @@
     <PackageReference Include="Miki.Discord.Caching" Version="2.4.4" />
     <PackageReference Include="Miki.Discord.Common" Version="1.7.0" />
     <PackageReference Include="Miki.Discord.Gateway.Centralized" Version="0.1.0-beta3" />
+    <PackageReference Include="Miki.Discord.Rest" Version="2.6.0" />
     <PackageReference Include="Miki.Net.Http" Version="2.1.0" />
     <PackageReference Include="Miki.Serialization" Version="0.1.0" />
     <PackageReference Include="Miki.Serialization.Protobuf" Version="1.0.4" />

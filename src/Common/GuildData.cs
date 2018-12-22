@@ -1,6 +1,7 @@
 using System;
+using Kururu.Framework.MySql;
 
-namespace Kururu.Framework.MySql
+namespace Kururu.Common
 {
     public class GuildData
     {

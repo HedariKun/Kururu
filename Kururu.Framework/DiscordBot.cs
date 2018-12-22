@@ -25,12 +25,10 @@ namespace Kururu.Framework
 		private IGateway _gateway;
 		public ConfigManger configManger;
 		public MysqlHandler mysqlHandler;
-		public CacheManger<GuildData> GuildsData;
 		public DateTime UpTime;
 		public DiscordBot (string ConfigPath)
 		{
 			cacheManger = new CacheManger<string> ();
-			GuildsData = new CacheManger<GuildData>();
 			configManger = new ConfigManger(ConfigPath);
 		}
 
@@ -82,15 +80,8 @@ namespace Kururu.Framework
 
 		public async Task StartAsync ()
 		{
-			try 
-			{
-				UpTime = DateTime.Now;
-				await _gateway.StartAsync ();
-			} catch (Exception)
-			{
-				Console.WriteLine("bots discconected, attempting to reconnect...");
-				await _gateway.StartAsync();
-			}
+			UpTime = DateTime.Now;
+			await _gateway.StartAsync ();
 		}
 
 	}

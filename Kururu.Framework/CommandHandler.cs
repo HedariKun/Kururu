@@ -69,6 +69,7 @@ namespace Kururu.Framework
 							var Value = await DiscordBot.Instance.cacheManger.GetAsync(name);
 							Field.SetValue(instance, Convert.ChangeType(Value, Field.FieldType));
 						}
+
 						var methods = data.GetMethods().Where(x => {
 							var CommandInfo = x.GetCustomAttribute<CommandAttribute>();
 							if (CommandInfo != null)

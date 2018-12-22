@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Kururu.Common;
 using Kururu.Framework;
 using Kururu.Framework.MySql;
 using Kururu.Framework.Cache;
@@ -15,6 +16,7 @@ namespace Kururu
 
 		public BotHandler ()
 		{
+
 			_handler = new CommandHandle ();
 		}
 
@@ -22,7 +24,7 @@ namespace Kururu
 		{
 			var Guilds = await DiscordBot.Instance.mysqlHandler.QueryData<GuildData>("SELECT * FROM guilds");
 			foreach(var Guild in Guilds) {
-				await DiscordBot.Instance.GuildsData.AddAsync(Guild.GuildID.ToString(), Guild);
+				await Program.GuildsData.AddAsync(Guild.GuildID.ToString(), Guild);
 			}
 			_prefix = await DiscordBot.Instance.cacheManger.GetAsync("Prefix");
 			DiscordBot.Instance.bot.MessageCreate += HandleCommand;
@@ -31,7 +33,7 @@ namespace Kururu
 
 		public async Task JoinGuild (IDiscordGuild guild)
 		{
-			if (!await DiscordBot.Instance.GuildsData.ExistAsync(guild.Id.ToString()))
+			if (!await Program.GuildsData.ExistAsync(guild.Id.ToString()))
 			{
 				await DiscordBot.Instance.mysqlHandler.QueryData(
 					$"INSERT INTO `guilds` (guilds.GuildID, guilds.Prefix, guilds.AddDate) VALUES ({guild.Id}, \"{_prefix}\", \"{DateTime.Now.ToString("yyyy-MM-dd H:mm:ss")}\")"
@@ -41,9 +43,12 @@ namespace Kururu
 
 		public async Task HandleCommand (IDiscordMessage message)
 		{
-			Console.WriteLine(message.Content);
+			var messageCallValue = int.Parse(await DiscordBot.Instance.cacheManger.GetAsync("MessageCall")) + 1;
+			await DiscordBot.Instance.cacheManger.UpdateAsync("MessageCall", messageCallValue.ToString());
+			if (message.Author.IsBot)
+				return;
 			var guild = await ((IDiscordGuildChannel) await message.GetChannelAsync()).GetGuildAsync();
-			var guildData = await DiscordBot.Instance.GuildsData.GetAsync(guild.Id.ToString());
+			var guildData = await Program.GuildsData.GetAsync(guild.Id.ToString());
 			var Prefix = guildData?.Prefix != null ? guildData.Prefix : _prefix;
 			var botUser = await DiscordBot.Instance.bot.GetCurrentUserAsync();
 			var MentionPrefix = "";
@@ -59,6 +64,8 @@ namespace Kururu
 			if (message.Content.StartsWith(Prefix))
 			{
 				MessageContext context = new MessageContext (Prefix, message);
+				var commandCallValue = int.Parse(await DiscordBot.Instance.cacheManger.GetAsync("CommandCall")) + 1;
+				await DiscordBot.Instance.cacheManger.UpdateAsync("CommandCall", commandCallValue.ToString());
 				await _handler.ExecuteCommand (context);
 			} 
 			else if (!string.IsNullOrEmpty(MentionPrefix))

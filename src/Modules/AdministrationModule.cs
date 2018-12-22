@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Miki.Discord.Common;
+using Kururu.Common;
 using Kururu.Framework;
 using Kururu.Framework.MySql;
 using Kururu.Framework.Commands;
@@ -46,7 +47,7 @@ namespace Kururu.Module
 			}
 			await DiscordBot.Instance.mysqlHandler.QueryData($"Update guilds SET guilds.Prefix=\"{Arg[0]}\" WHERE guilds.GuildID={Guild.Id}");
 			var NewData = await DiscordBot.Instance.mysqlHandler.QueryData<GuildData>($"SELECT * FROM guilds WHERE guilds.GuildID={Guild.Id}");
-			await DiscordBot.Instance.GuildsData.UpdateAsync(Guild.Id.ToString(), NewData[0]);
+			await Program.GuildsData.UpdateAsync(Guild.Id.ToString(), NewData[0]);
 			await Channel.SendMessageAsync($"The Server's Prefix Updated To: **{Arg[0]}**");
 		}
 
